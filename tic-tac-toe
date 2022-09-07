@@ -1,11 +1,23 @@
 // 单元格组件 Square
 class Square extends React.Component {
+  // 构造函数
+  constructor(props) {
+    // 在 JavaScript class 中，每次定义其子类的构造函数时，都需要调用 super 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 super(props) 开头。
+    super(props);
+    this.state = { // state 是 Square 组件的私有属性
+      value: null,
+    };
+  }
+  // 渲染函数
   render() {
     // Square 组件渲染的内容
+    // 每次在组件中调用 setState 时，React 都会自动更新其子组件。
     return (
-      <button className="square">
-        // 渲染名为 value 的 prop
-        {this.props.value}
+      <button 
+        className="square" 
+        onClick={() => this.setState({value: 'X'})}
+      >
+        {this.state.value}
       </button>
     );
   }
