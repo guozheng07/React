@@ -11,22 +11,39 @@ class Square extends React.Component {
   // 渲染函数
   render() {
     // Square 组件渲染的内容
-    // 每次在组件中调用 setState 时，React 都会自动更新其子组件。
+    // 每次调用 setState 时，通知 React 去重新渲染 Square 组件
     return (
-      <button 
-        className="square" 
-        onClick={() => this.setState({value: 'X'})}
+      <button
+        className="square"
+        onClick={() => this.props.onClick()}
       >
-        {this.state.value}
+        {this.props.value}
       </button>
     );
   }
 }
 // 棋盘组件 Board
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+  // Board 组件的方法
+  handleClick(i) {
+    // 创建了一个副本（使用 .slice() 函数对 squares 数组进行拷贝，而非直接修改现有的数组）
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares: squares});
+  }
   // Board 的函数组件
   renderSquare(i) {
-    return <Square value={i} />;
+    // 获取每一个 Square 的当前值
+    <Square
+      value={this.state.squares[i]}
+      onClick={() => this.handleClick(i)}
+    />
   }
 
   render() {
