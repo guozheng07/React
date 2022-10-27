@@ -10,3 +10,7 @@ https://github.com/Schniz/fnm
 - fnm list-remote：列出服务器上所有的 node 版本
 - fnm uninstall 版本号：卸载特定版本
 - fnm default 版本号：设置默认版本
+
+# Kanban 项目
+## 原型图
+![image](https://user-images.githubusercontent.com/42236890/198245478-7cd26814-8ff9-4b0c-81bd-ad8a0887618d.png)
