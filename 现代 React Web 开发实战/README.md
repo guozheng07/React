@@ -14,3 +14,9 @@ https://github.com/Schniz/fnm
 # Kanban 项目
 ## 原型图
 ![image](https://user-images.githubusercontent.com/42236890/198245478-7cd26814-8ff9-4b0c-81bd-ad8a0887618d.png)
+## 创建项目
+npx create-react-app my-kanban（node 版本：v16.6.1）
+## 改写项目
+根据原型图，将原项目修改成“看板”项目  
+
+
