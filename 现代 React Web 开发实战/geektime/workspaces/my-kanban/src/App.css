@@ -1,0 +1,126 @@
+.App {
+  display: flex;
+  flex-direction: column; 
+  /* 
+    1.gap 属性用来设置网格行与列之间的间隙（gutters），该属性是 row-gap 和 column-gap 的简写形式。 
+    2.rem 是相对单位。
+  */
+  gap: 1rem;
+  /* 
+    1.在 CSS 中，我们有与视口尺寸相关的度量单位，即意为视口宽度的 vw 单位，以及意为视口高度的 vh 单位。
+    2.vw 和 vh 是相对单位，使用这些单位，你可以把一些东西做得随用户的视口改变大小。 
+  */
+  height: 100vh;
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  height: 80%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+  
+.App-header {
+  /* 整个页面中 header 占1份高度  */
+  flex: 1;
+  margin: 1rem 1rem 0;
+  border-radius: 1rem;
+  background-color: #282c34;
+  min-height: 100vh;
+  min-height: 5rem;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.kanban-board {
+  /* 整个页面中 section 占10份高度  */
+  flex: 10;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin: 0 1rem 1rem;
+}
+
+.kanban-column {
+  /* 每个看板宽度一样，可收缩 */
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid gray;
+  border-radius: 1rem;
+}
+
+.kanban-column > ul {
+  /* 保证了卡片增减不会改变页面高度，而是自动出现滚动条 */
+  flex: 1;
+  flex-basis: 0;
+  overflow: auto;
+
+  margin: 1rem;
+  padding: 0;
+}
+
+.kanban-column > h2 > button {
+  float: right;
+  margin-top: 0.2rem;
+  padding: 0.2rem 0.5rem;
+  border: 0;
+  border-radius: 1rem;
+  height: 1.8rem;
+  line-height: 1rem;
+  font-size: 1rem;
+}
+    
+.kanban-card {
+  margin-bottom: 1rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid gray;
+  border-radius: 1rem;
+  list-style: none;
+  background-color: rgba(255, 255, 255, 0.4);
+  text-align: left;
+}
+    
+.card-title {
+  min-height: 3rem;
+}
+
+.card-title > input[type="text"] {
+  width: 80%;
+}
+    
+.card-status {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+/* 看板标题颜色 */
+.kanban-column > h2 {
+  margin: 0.6rem 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid gray;
+}
+
+.column-todo {
+  background-color: #C9AF97;
+}
+
+.column-ongoing {
+  background-color: #FFE799;
+}
+
+.column-done {
+  background-color: #C0E8BA;
+}
