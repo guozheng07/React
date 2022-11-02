@@ -1,14 +1,28 @@
+/** @jsxImportSource @emotion/react */
+// 在 App.js 文件开头加入一行 JSX Pragma（编译指示），告诉 JS 编译器使用 @emotion/react 包来替代 React 原生的jsx 运行时
 import logo from './logo.svg';
 import './App.css';
 
 import React, { useState } from 'react';
+// 从 @emotion/react 包导入 css 函数
+// 用 CSS-in-JS 代替从 App.css 中引入的类名样式
+// 当你用 @emotion/react 的 css 属性写组件样式时，从框架设计上你可以把 React 内外的变量都插进样式代码里，包括 React 组件的 props、state 和 context。
+import { css } from '@emotion/react';
 
 // 循环渲染事项的组件
 const KanbanCard = ({ title, status }) => {
   return (
-    <li className="kanban-card">
-      <div className="card-title">{title}</div>
-      <div className="card-status">{status}</div>
+    // <li className="kanban-card">
+    //   <div className="card-title">{title}</div>
+    //   <div className="card-status">{status}</div>
+    // </li>
+    <li css={kanbanCardStyle}>
+      <div css={kanbanCardTitleStyle}>{title}</div>
+      <div css={css`
+        text-align: right;
+        font-size: 0.8rem;
+        color: #333;
+      `}>{status}</div>
     </li>
   );
 };
@@ -29,9 +43,22 @@ const KanbanNewCard = ({ onSubmit }) => {
   };
 
   return (
-    <li className="kanban-card">
+    // <li className="kanban-card">
+    //   <h3>添加新卡片</h3>
+    //   <div className="card-title">
+    //     <input type="text" value={ title }
+    //       onChange={ handleChange } onKeyDown={ handleKeyDown } />
+    //   </div>
+    // </li>
+    <li css={kanbanCardStyle}>
       <h3>添加新卡片</h3>
-      <div className="card-title">
+      <div css={css`
+        ${kanbanCardTitleStyle}
+
+        & > input[type="text"] {
+          width: 80%;
+        }
+      `}>
         <input type="text" value={ title }
           onChange={ handleChange } onKeyDown={ handleKeyDown } />
       </div>
@@ -39,18 +66,91 @@ const KanbanNewCard = ({ onSubmit }) => {
   );
 };
 
-// 将 main 标签也写成 React 组件
+// 将 main 标签改写成 React 组件
 // main 标签呈现了文档的 body 或应用的主体部分
 const KanbanBoard = ({ children }) => (
-  <main className="kanban-board">{children}</main>
+  // <main className="kanban-board">{children}</main>
+  // 将` `定义的模板字面量（Template Literals）直接拼在函数名后面是 ES6 里新加入的语法，称作带标签的模版字符串（Tagged Templates）
+  <main css={css`
+    flex: 10;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 0 1rem 1rem;
+  `}>{children}</main>
 );
+
+// .kanban-card、.card-title 的样式不止被 KanbanCard 使用，还被 KanbanNewCard 使用，最直接的复用方式，就是在两个组件外部声明一个值为 css 函数执行结果的常量，然后赋给 HTML 元素的 css 属性
+const kanbanCardStyle = css`
+  margin-bottom: 1rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid gray;
+  border-radius: 1rem;
+  list-style: none;
+  background-color: rgba(255, 255, 255, 0.4);
+  text-align: left;
+
+  // 为 kanbanCard 加上鼠标悬停效果 -> 使用伪类选择器
+  &:hover {
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.2), inset 0 1px #fff;
+  }
+`;
+const kanbanCardTitleStyle = css`
+  min-height: 3rem;
+`;
+
+// 三个看板的背景颜色
+const COLUMN_BG_COLORS = {
+  todo: '#C9AF97',
+  ongoing: '#FFE799;',
+  done: 'C0E8BA',
+}
 
 // 将 section 标签也写成 React 组件
 // section 表示 HTML 文档中一个通用独立章节
-const KanbanColumn = ({ children, className, title }) => {
-  const combinedClassName = `kanban-column ${className}`;
+const KanbanColumn = ({ children, bgColor, title }) => {
+  // const combinedClassName = `kanban-column ${className}`;
   return (
-    <section className={combinedClassName}>
+    // <section className={combinedClassName}>
+    //   <h2>{title}</h2>
+    //   <ul>{children}</ul>
+    // </section>
+
+    // 用 CSS-in-JS 代替类名
+    <section css={css`
+      flex: 1 1;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid gray;
+      border-radius: 1rem;
+      background-color: ${bgColor};
+      // emotion 框架的嵌套选择器
+      // > 是子选择器
+      & > h2 {
+        margin: 0.6rem 1rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid gray;
+
+        & > button {
+          float: right;
+          margin-top: 0.2rem;
+          padding: 0.2rem 0.5rem;
+          border: 0;
+          border-radius: 1rem;
+          height: 1.8rem;
+          line-height: 1rem;
+          font-size: 1rem;
+        }
+      }
+
+      & > ul {
+        flex: 1;
+        flex-basis: 0;
+        overflow: auto;
+        margin: 1rem;
+        padding: 0;
+      }
+    `}>
       <h2>{title}</h2>
       <ul>{children}</ul>
     </section>
@@ -123,7 +223,7 @@ function App() {
       {/* 改进版本 */}
       <KanbanBoard>
         {/* HTML 元素抽取成组件 props 时，要在外层加 Fragment */}
-        <KanbanColumn className="column-todo" title={
+        <KanbanColumn bgColor={COLUMN_BG_COLORS.todo} title={
             // 相邻的 JSX 元素必须包装在封闭标记中
             <>
             待处理<button onClick={handleAdd}
@@ -131,13 +231,13 @@ function App() {
             </>
           }>
             { showAdd && <KanbanNewCard onSubmit={ handleSubmit } /> }
-            { todoList.map(props => <KanbanCard {...props}/>) }
+            { todoList.map(props => <KanbanCard key={props.title} {...props}/>) }
         </KanbanColumn>
-        <KanbanColumn className="column-ongoing" title="处理中">
-          { ongoingList.map(props => <KanbanCard {...props}/>) }
+        <KanbanColumn bgColor={COLUMN_BG_COLORS.ongoing} title="处理中">
+          { ongoingList.map(props => <KanbanCard key={props.title} {...props}/>) }
         </KanbanColumn>
-        <KanbanColumn className="column-done" title="已完成">
-          { doneList.map(props => <KanbanCard {...props}/>) }
+        <KanbanColumn bgColor={COLUMN_BG_COLORS.done} title="已完成">
+          { doneList.map(props => <KanbanCard key={props.title} {...props}/>) }
         </KanbanColumn>
       </KanbanBoard>
 
