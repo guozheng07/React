@@ -39,6 +39,23 @@ const KanbanNewCard = ({ onSubmit }) => {
   );
 };
 
+// 将 main 标签也写成 React 组件
+// main 标签呈现了文档的 body 或应用的主体部分
+const KanbanBoard = ({ children }) => (
+  <main className="kanban-board">{children}</main>
+);
+
+// 将 section 标签也写成 React 组件
+// section 表示 HTML 文档中一个通用独立章节
+const KanbanColumn = ({ children, className, title }) => {
+  const combinedClassName = `kanban-column ${className}`;
+  return (
+    <section className={combinedClassName}>
+      <h2>{title}</h2>
+      <ul>{children}</ul>
+    </section>
+  );
+};
 
 function App() {
   // showAdd 的初始值为 false，改变其值的方法是 setShowAdd
@@ -77,17 +94,15 @@ function App() {
         <h1>我的看板</h1>
         <img src={ logo } className="App-logo" alt="logo" />
       </header>
-      {/* main 标签呈现了文档的 <body> 或应用的主体部分 */}
-      {/*  section 表示 HTML 文档中一个通用独立章节 */}
-      <main className="kanban-board">
+
+      {/* 初始版本 */}
+      {/* <main className="kanban-board">
         <section className="kanban-column column-todo">
           <h2>待处理<button onClick={ handleAdd }
             disabled={ showAdd }>&#8853; 添加新卡片</button>
           </h2>
           <ul>
-            {/* showAdd 为 true 时展示 KanbanNewCard 组件*/}
             { showAdd && <KanbanNewCard onSubmit={ handleSubmit } /> }
-            {/* 将数组的每个对象元素展开，传递给 KanbanCard 组件*/}
             { todoList.map(props => <KanbanCard {...props}/>) }
           </ul>
         </section>
@@ -103,7 +118,29 @@ function App() {
             { doneList.map(props => <KanbanCard {...props}/>) }
           </ul>
         </section>
-      </main>
+      </main> */}
+
+      {/* 改进版本 */}
+      <KanbanBoard>
+        {/* HTML 元素抽取成组件 props 时，要在外层加 Fragment */}
+        <KanbanColumn className="column-todo" title={
+            // 相邻的 JSX 元素必须包装在封闭标记中
+            <>
+            待处理<button onClick={handleAdd}
+              disabled={showAdd}>&#8853; 添加新卡片</button>
+            </>
+          }>
+            { showAdd && <KanbanNewCard onSubmit={ handleSubmit } /> }
+            { todoList.map(props => <KanbanCard {...props}/>) }
+        </KanbanColumn>
+        <KanbanColumn className="column-ongoing" title="处理中">
+          { ongoingList.map(props => <KanbanCard {...props}/>) }
+        </KanbanColumn>
+        <KanbanColumn className="column-done" title="已完成">
+          { doneList.map(props => <KanbanCard {...props}/>) }
+        </KanbanColumn>
+      </KanbanBoard>
+
     </div>
       );
     }
