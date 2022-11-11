@@ -3,7 +3,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // 从 @emotion/react 包导入 css 函数
 // 利用 CSS-in-JS 技术将 React 组件的 CSS 样式也组件化（代替从 App.css 中引入的类名样式）
 // 当你用 @emotion/react 的 css 属性写组件样式时，从框架设计上你可以把 React 内外的变量都插进样式代码里，包括 React 组件的 props、state 和 context。
@@ -73,6 +73,12 @@ const KanbanNewCard = ({ onSubmit }) => {
       onSubmit(title);
     }
   };
+  // 文本框 dom
+  const inputElem = useRef(null);
+  useEffect(() => {
+    // 为文本框添加焦点
+    inputElem.current.focus();
+  }, []);
 
   return (
     // <li className="kanban-card">
@@ -91,7 +97,7 @@ const KanbanNewCard = ({ onSubmit }) => {
           width: 80%;
         }
       `}>
-        <input type="text" value={ title }
+        <input type="text" value={ title } ref={inputElem}
           onChange={ handleChange } onKeyDown={ handleKeyDown } />
       </div>
     </li>
